@@ -1,0 +1,10 @@
+---
+
+# storage dir should exists
+storage: "./var"
+
+settings: "examples/settings.lua"
+initscript: "examples/init.lua"
+telegram:
+  token: "TOKEN"
+  chatid: "CHATID"
