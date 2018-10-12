@@ -3,6 +3,8 @@ RUN apk --no-cache add git make gcc
 
 WORKDIR /go/luscheduler
 
+RUN git clone http://192.168.23.1:10085/spigell/luscheduler
+
 RUN make submodule_check
 RUN make
 

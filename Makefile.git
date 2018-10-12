@@ -9,7 +9,7 @@ submodule_update:
 	git submodule update
 
 submodule_pull:
-git submodule foreach "git pull"
+	git submodule foreach "git pull"
 
 
 submodule_check:
