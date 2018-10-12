@@ -14,6 +14,6 @@ for _, a in pairs(filepath.glob(scenarios_dir.."/*.lua")) do
 end
 
 function sleep()
-  os.execute("sleep infinity")
+  os.execute("while sleep 3600; do :; done")
 end
 sleep()
