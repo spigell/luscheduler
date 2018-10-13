@@ -9,7 +9,7 @@ RUN make submodule_check
 RUN make
 
 FROM alpine:latest
-RUN apk --no-cache add ca-certificates bash
+RUN apk --no-cache add ca-certificates bash tzdata
 WORKDIR /root/
 COPY --from=builder /go/luscheduler/bin/luscheduler .
 COPY /docker/entrypoint.sh /tmp/entrypoint.sh
