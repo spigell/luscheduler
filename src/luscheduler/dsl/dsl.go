@@ -17,7 +17,7 @@ var(
 
 type dslConfig struct{
         Telegram        Telegram
-	Cron *cron.Cron
+	Cron           *cron.Cron
 }
 
 type Telegram struct {
@@ -55,5 +55,12 @@ func Register(config *dslConfig, L *lua.LState) {
         L.SetField(filepath, "ext", L.NewFunction(config.dslFilepathExt))
         L.SetField(filepath, "glob", L.NewFunction(config.dslFilepathGlob))
 
+        zabbix := L.NewTypeMetatable("zabbix")
+        L.SetGlobal("zabbix", zabbix)
+        L.SetField(zabbix, "login", L.NewFunction(config.dslZabbixLogin))
+        L.SetField(zabbix, "__index", L.SetFuncs(L.NewTable(), map[string]lua.LGFunction{
+                "alarms": config.dslZabbixGetTriggers,
+                "logout": config.dslZabbixLogout,
+        }))
 
 }

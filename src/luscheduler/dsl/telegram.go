@@ -54,7 +54,7 @@ func (d *dslConfig) TelegramSendMessage (L *lua.LState) int {
         }
 
         body, err := ioutil.ReadAll(response.Body)
-        log.Println(string(body))
+        log.Printf("[DEBUG] telegram responce: ", string(body))
 
         if err != nil {
                 log.Println(err)

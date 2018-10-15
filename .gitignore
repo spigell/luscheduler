@@ -4,3 +4,4 @@ var*
 *.yml
 *_test
 bin/*
+*.sublime-workspace

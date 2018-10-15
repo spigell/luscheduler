@@ -1,6 +1,6 @@
-SCHEDULE = '* * 18 * * *'
+SCHEDULE = '00 00 18 * * *'
 
-SendTelegram("Hello from lua!")
+sendTelegram("Hello from lua!")
 
 
 

@@ -18,6 +18,7 @@ func main() {
 
 	conf := global.ReadConfiguration()
 
+
         state := lua.NewState()
         script, config := dsl.Prepare(conf.InitScript)
         dsl.Register(config, state)
