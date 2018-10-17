@@ -9,30 +9,11 @@ import (
         "io/ioutil"
         "fmt"
 
-	"gopkg.in/telegram-bot-api.v4"
-
         lua "github.com/yuin/gopher-lua"
 
 
 )
 
-
-// Do not use it
-func TelegramStartBot (token string) {
-
-	bot, err := tgbotapi.NewBotAPI(token)
-        if err != nil {
-                log.Panic(err)
-        }
-
-        bot.Debug = true
-
-        log.Printf("Authorized on account %s", bot.Self.UserName)
-
-        u := tgbotapi.NewUpdate(0)
-        u.Timeout = 45
-
-}
 
 
 func (d *dslConfig) TelegramSendMessage (L *lua.LState) int {

@@ -1,7 +1,4 @@
-SCHEDULE = '00 00 18 * * *'
-
-sendTelegram("Hello from lua!")
+SCHEDULE = '@every 10s'
 
 
-
-
+print("GO + lua = Cool\n")
