@@ -204,12 +204,12 @@ func (d *dslZabbix) apiVersion() (string, error) {
 
 func (d *dslConfig) dslZabbixGetTriggers(L *lua.LState) int {
 	z := checkZabbixConn(L)
-	pattern := L.CheckString(2)
-	minSeverity := L.CheckString(3)
-	duration := L.CheckString(4)
+	args := L.CheckTable(2)
+	pattern := args.RawGetString("pattern").String()
+	duration := args.RawGetString("duration").String()
+	minSeverity := args.RawGetString("severity").String()
 
 	durationInt, _ := strconv.Atoi(duration)
-//	durationInSec := durationInt * 60
 
 	triggerUntil := time.Now().Unix() - int64(durationInt * 60)
 
