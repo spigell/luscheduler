@@ -27,14 +27,12 @@ type Telegram struct {
 
 
 
-func Prepare( file string ) (string, *dslConfig) {
+func Prepare() *dslConfig {
         CurrentCron.Start()
-
-        script := global.MergeSettings(Conf.Storage, file, Conf.Settings)
 
         Tg := Telegram{ Token: Conf.Telegram.Token, ChatId: Conf.Telegram.ChatId }
 
-        return script, &dslConfig{ Cron: CurrentCron, Telegram: Tg }
+        return &dslConfig{ Cron: CurrentCron, Telegram: Tg }
 }
 
 

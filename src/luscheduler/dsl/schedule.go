@@ -23,9 +23,9 @@ func (d *dslConfig) dslNewSchedule(L *lua.LState) int {
 
 func run (s string) {
 	state := lua.NewState()
-        script, config := Prepare(s)
+        config := Prepare()
         Register(config, state)
-	if err := state.DoFile(script); err != nil {
+	if err := state.DoFile(s); err != nil {
 		log.Printf("[ERROR]: ", err)
 	}
 }
