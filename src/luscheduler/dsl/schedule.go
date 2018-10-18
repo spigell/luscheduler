@@ -8,7 +8,7 @@ import (
 )
 
 
-func (d *dslConfig) dslNewSchedule(L *lua.LState) int {
+func (d *dslState) dslNewSchedule(L *lua.LState) int {
 	schedule := L.CheckString(1)
 	scenario := L.CheckString(2)
         log.Printf("[INFO] add new schedule: `%s` with scenario `%s`\n", schedule, scenario)
@@ -26,7 +26,7 @@ func run (s string) {
         config := Prepare()
         Register(config, state)
 	if err := state.DoFile(s); err != nil {
-		log.Printf("[ERROR]: ", err)
+		log.Printf("[ERROR] Error executing scenario: ", err)
 	}
 }
 

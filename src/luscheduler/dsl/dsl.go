@@ -15,7 +15,7 @@ var(
         Conf = global.ReadConfiguration()
 )     
 
-type dslConfig struct{
+type dslState struct{
         Telegram        Telegram
 	Cron           *cron.Cron
 }
@@ -27,16 +27,16 @@ type Telegram struct {
 
 
 
-func Prepare() *dslConfig {
+func Prepare() *dslState {
         CurrentCron.Start()
 
         Tg := Telegram{ Token: Conf.Telegram.Token, ChatId: Conf.Telegram.ChatId }
 
-        return &dslConfig{ Cron: CurrentCron, Telegram: Tg }
+        return &dslState{ Cron: CurrentCron, Telegram: Tg }
 }
 
 
-func Register(config *dslConfig, L *lua.LState) {
+func Register(config *dslState, L *lua.LState) {
 
         schedule := L.NewTypeMetatable("schedule")
         L.SetGlobal("schedule", schedule)
@@ -60,5 +60,9 @@ func Register(config *dslConfig, L *lua.LState) {
                 "alarms": config.dslZabbixGetTriggers,
                 "logout": config.dslZabbixLogout,
         }))
+
+        http := L.NewTypeMetatable("http")
+        L.SetGlobal("http", http)
+        L.SetField(http, "request", L.NewFunction(config.dslHttpRequest))
 
 }

@@ -7,25 +7,25 @@ import (
 	lua "github.com/yuin/gopher-lua"
 )
 
-func (d *dslConfig) dslFilepathBasename(L *lua.LState) int {
+func (d *dslState) dslFilepathBasename(L *lua.LState) int {
 	path := L.CheckString(1)
 	L.Push(lua.LString(filepath.Base(path)))
 	return 1
 }
 
-func (d *dslConfig) dslFilepathDir(L *lua.LState) int {
+func (d *dslState) dslFilepathDir(L *lua.LState) int {
 	path := L.CheckString(1)
 	L.Push(lua.LString(filepath.Dir(path)))
 	return 1
 }
 
-func (d *dslConfig) dslFilepathExt(L *lua.LState) int {
+func (d *dslState) dslFilepathExt(L *lua.LState) int {
 	path := L.CheckString(1)
 	L.Push(lua.LString(filepath.Ext(path)))
 	return 1
 }
 
-func (d *dslConfig) dslFilepathGlob(L *lua.LState) int {
+func (d *dslState) dslFilepathGlob(L *lua.LState) int {
 	pattern := L.CheckString(1)
 	files, err := filepath.Glob(pattern)
 	if err != nil {

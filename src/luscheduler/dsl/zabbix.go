@@ -141,7 +141,7 @@ func (d *dslZabbix) request(method string, data interface{}) (dslZabbixJsonRPCRe
 	return result, nil
 }
 
-func (d *dslConfig) dslZabbixLogin(L *lua.LState) int {
+func (d *dslState) dslZabbixLogin(L *lua.LState) int {
 	params := make(map[string]string, 0)
 	params["user"] = L.CheckString(2)
 	params["password"] = L.CheckString(3)
@@ -177,7 +177,7 @@ func (d *dslConfig) dslZabbixLogin(L *lua.LState) int {
 
 }
 
-func (d *dslConfig) dslZabbixLogout(L *lua.LState) int {
+func (d *dslState) dslZabbixLogout(L *lua.LState) int {
 	z := checkZabbixConn(L)
 	response, err := z.request("user.logout", make(map[string]string, 0))
 	if err != nil {
@@ -202,7 +202,7 @@ func (d *dslZabbix) apiVersion() (string, error) {
 	return version, nil
 }
 
-func (d *dslConfig) dslZabbixGetTriggers(L *lua.LState) int {
+func (d *dslState) dslZabbixGetTriggers(L *lua.LState) int {
 	z := checkZabbixConn(L)
 	args := L.CheckTable(2)
 	pattern := args.RawGetString("pattern").String()
@@ -294,7 +294,6 @@ func (d *dslConfig) dslZabbixGetTriggers(L *lua.LState) int {
 func checkZabbixConn(L *lua.LState) *dslZabbix {
         ud := L.CheckUserData(1)
         if v, ok := ud.Value.(*dslZabbix); ok {
-        	fmt.Println(ok)
                 return v
         }
         L.ArgError(1, "It is not a zabbix connection")
@@ -327,5 +326,4 @@ func (d *dslZabbix) updateReq(req *http.Request) {
 	}
 	req.Header.Set("Content-Type", `application/json-rpc`)
 }
-
 

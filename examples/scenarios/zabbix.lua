@@ -1,4 +1,4 @@
-SCHEDULE = '@every 2s'
+SCHEDULE = '@every 10s'
 
 package.path = filepath.dir(debug.getinfo(1).source)..'/../?.lua;'.. package.path
 settings = require "settings"

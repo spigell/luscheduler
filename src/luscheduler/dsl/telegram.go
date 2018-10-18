@@ -15,7 +15,7 @@ import (
 )
 
 
-func (d *dslConfig) TelegramSendMessage (L *lua.LState) int {
+func (d *dslState) TelegramSendMessage (L *lua.LState) int {
 
 	var client http.Client
         chatId := L.CheckString(1)
@@ -34,7 +34,7 @@ func (d *dslConfig) TelegramSendMessage (L *lua.LState) int {
         }
 
         body, err := ioutil.ReadAll(response.Body)
-        log.Printf("[DEBUG] telegram responce: ", string(body))
+        log.Printf("[DEBUG] telegram response: ", string(body))
 
         if err != nil {
                 log.Println(err)
