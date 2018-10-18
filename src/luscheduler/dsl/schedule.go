@@ -15,13 +15,13 @@ func (d *dslState) dslNewSchedule(L *lua.LState) int {
         
         cron := d.Cron
 
-        cron.AddFunc(schedule, func (){ (run(scenario)) })
+        cron.AddFunc(schedule, func (){ (Run(scenario)) })
 
         return 0
 }
 
 
-func run (s string) {
+func Run (s string) {
 	state := lua.NewState()
         config := Prepare()
         Register(config, state)

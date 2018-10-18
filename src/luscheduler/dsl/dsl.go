@@ -6,23 +6,14 @@ import (
 
         lua "github.com/yuin/gopher-lua"
 
-        "luscheduler/global"
-
 )
 
 var(
         CurrentCron = cron.New()
-        Conf = global.ReadConfiguration()
 )     
 
 type dslState struct{
-        Telegram        Telegram
 	Cron           *cron.Cron
-}
-
-type Telegram struct {
-        Token   string
-        ChatId  string
 }
 
 
@@ -30,9 +21,7 @@ type Telegram struct {
 func Prepare() *dslState {
         CurrentCron.Start()
 
-        Tg := Telegram{ Token: Conf.Telegram.Token, ChatId: Conf.Telegram.ChatId }
-
-        return &dslState{ Cron: CurrentCron, Telegram: Tg }
+        return &dslState{ Cron: CurrentCron }
 }
 
 
