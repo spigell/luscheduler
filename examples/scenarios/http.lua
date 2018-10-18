@@ -5,16 +5,17 @@ settings = require "settings"
 
 request, err = http.request{
   type = "GET", 
-  url = "http://127.0.0.1:8081", 
+  url = "http://127.0.0.1:8081/get",
   useragent = "luscheduler", 
   headers = "token: 1234; Authorization: Bearer 132"
 }
+
 print(request.code)
 print(request.body)
 
 request, err = http.request{
   type = "POST", 
-  url = "http://127.0.0.1:8081", 
+  url = "http://127.0.0.1:8081/post",
   useragent = "luscheduler", 
   user = "admin",
   password = "admin",

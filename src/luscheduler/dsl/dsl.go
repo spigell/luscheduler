@@ -54,4 +54,9 @@ func Register(config *dslState, L *lua.LState) {
         L.SetGlobal("http", http)
         L.SetField(http, "request", L.NewFunction(config.dslHttpRequest))
 
+        json := L.NewTypeMetatable("json")
+        L.SetGlobal("json", json)
+        L.SetField(json, "decode", L.NewFunction(config.dslJsonDecode))
+        L.SetField(json, "encode", L.NewFunction(config.dslJsonEncode))
+
 }

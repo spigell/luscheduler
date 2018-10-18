@@ -326,4 +326,3 @@ func (d *dslZabbix) updateReq(req *http.Request) {
 	}
 	req.Header.Set("Content-Type", `application/json-rpc`)
 }
-
