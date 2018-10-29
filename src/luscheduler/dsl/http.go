@@ -109,7 +109,6 @@ func (d *dslState) dslHttpRequest(L *lua.LState) int {
 		L.Push(lua.LString(fmt.Sprintf("http send request error: %s\n", err.Error())))
 		return 2
 	}
-	//fmt.Printf("%+v", response)
 
 	data, err := ioutil.ReadAll(response.Body)
 	if err != nil {

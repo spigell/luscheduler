@@ -1,6 +1,7 @@
 package dsl
 
 import (
+        "log"
 
         "github.com/robfig/cron"
 
@@ -16,7 +17,14 @@ type dslState struct{
 	Cron           *cron.Cron
 }
 
-
+func Run (s string) {
+        state := lua.NewState()
+        config := Prepare()
+        Register(config, state)
+        if err := state.DoFile(s); err != nil {
+                log.Printf("[ERROR] Error executing scenario: ", err)
+        }
+}
 
 func Prepare() *dslState {
         CurrentCron.Start()
@@ -58,5 +66,13 @@ func Register(config *dslState, L *lua.LState) {
         L.SetGlobal("json", json)
         L.SetField(json, "decode", L.NewFunction(config.dslJsonDecode))
         L.SetField(json, "encode", L.NewFunction(config.dslJsonEncode))
+
+        ssh := L.NewTypeMetatable("ssh")
+        L.SetGlobal("ssh", ssh)
+        L.SetField(ssh, "auth", L.NewFunction(config.dslSshAuth))
+        L.SetField(ssh, "__index", L.SetFuncs(L.NewTable(), map[string]lua.LGFunction{
+                "execute": config.dslSshExecute,
+                "copy": config.dslScpCopy,
+        }))
 
 }

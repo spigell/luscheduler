@@ -21,12 +21,4 @@ func (d *dslState) dslNewSchedule(L *lua.LState) int {
 }
 
 
-func Run (s string) {
-	state := lua.NewState()
-        config := Prepare()
-        Register(config, state)
-	if err := state.DoFile(s); err != nil {
-		log.Printf("[ERROR] Error executing scenario: ", err)
-	}
-}
 

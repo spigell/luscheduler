@@ -1,3 +1,4 @@
+// Thanks vadv for example!
 package dsl
 
 import (
@@ -187,19 +188,6 @@ func (d *dslState) dslZabbixLogout(L *lua.LState) int {
 		return 1
 	}
 	return 0
-}
-
-func (d *dslZabbix) apiVersion() (string, error) {
-	response, err := d.request("APIInfo.version", make(map[string]string, 0))
-	if err != nil {
-		return "", err
-	}
-	if response.Error.Code != 0 {
-		return "", &response.Error
-	}
-	version := response.Result.(string)
-	d.version = version
-	return version, nil
 }
 
 func (d *dslState) dslZabbixGetTriggers(L *lua.LState) int {

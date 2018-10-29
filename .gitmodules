@@ -7,3 +7,12 @@
 [submodule "src/gopkg.in/yaml.v2"]
 	path = src/gopkg.in/yaml.v2
 	url = https://gopkg.in/yaml.v2
+[submodule "src/golang.org/x/crypto"]
+	path = src/golang.org/x/crypto
+	url = https://github.com/golang/crypto/
+[submodule "src/github.com/tmc/scp"]
+	path = src/github.com/tmc/scp
+	url = https://github.com/tmc/scp
+[submodule "src/github.com/kballard/go-shellquote"]
+	path = src/github.com/kballard/go-shellquote
+	url = https://github.com/kballard/go-shellquote
