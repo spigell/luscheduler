@@ -10,10 +10,9 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"time"
-	"strconv"
 	"regexp"
-
+	"strconv"
+	"time"
 
 	lua "github.com/yuin/gopher-lua"
 )
@@ -93,7 +92,6 @@ type dslZabbixTrigger struct {
 	Items       []dslZabbixItem  `json:"items"`
 }
 
-
 func (z *dslZabbixError) Error() string {
 	return z.Data
 }
@@ -147,7 +145,7 @@ func (d *dslState) dslZabbixLogin(L *lua.LState) int {
 	params["user"] = L.CheckString(2)
 	params["password"] = L.CheckString(3)
 
-	z := &dslZabbix{ user: params["user"], passwd: params["password"], url: L.CheckString(1)}
+	z := &dslZabbix{user: params["user"], passwd: params["password"], url: L.CheckString(1)}
 
 	err := z.buildHttpClient()
 	if err != nil {
@@ -157,24 +155,24 @@ func (d *dslState) dslZabbixLogin(L *lua.LState) int {
 	response, err := z.request("user.login", params)
 	if err != nil {
 		log.Printf("[ERROR] ", err)
-	        L.Push(lua.LNil)
-                L.Push(lua.LString(err.Error()))
+		L.Push(lua.LNil)
+		L.Push(lua.LString(err.Error()))
 		return 2
 	}
 	if response.Error.Code != 0 {
-		log.Printf("[ERROR] %+v", &response.Error) 
-	        L.Push(lua.LNil)
-                L.Push(lua.LString(response.Error.Code))
+		log.Printf("[ERROR] %+v", &response.Error)
+		L.Push(lua.LNil)
+		L.Push(lua.LString(response.Error.Code))
 		return 2
 	}
 	z.auth = response.Result.(string)
 
 	ud := L.NewUserData()
-        ud.Value = z
-        L.SetMetatable(ud, L.GetTypeMetatable("zabbix"))
-        L.Push(ud)
-        log.Printf("[INFO] New zabbix connection to `%s`\n", z.url)
-        return 1
+	ud.Value = z
+	L.SetMetatable(ud, L.GetTypeMetatable("zabbix"))
+	L.Push(ud)
+	log.Printf("[INFO] New zabbix connection to `%s`\n", z.url)
+	return 1
 
 }
 
@@ -199,7 +197,7 @@ func (d *dslState) dslZabbixGetTriggers(L *lua.LState) int {
 
 	durationInt, _ := strconv.Atoi(duration)
 
-	triggerUntil := time.Now().Unix() - int64(durationInt * 60)
+	triggerUntil := time.Now().Unix() - int64(durationInt*60)
 
 	params := make(map[string]interface{}, 0)
 	params["output"] = "extend"
@@ -226,24 +224,24 @@ func (d *dslState) dslZabbixGetTriggers(L *lua.LState) int {
 	response, err := z.request(`trigger.get`, params)
 	if err != nil {
 		log.Printf("[ERROR] ", err)
-	        L.Push(lua.LNil)
-                L.Push(lua.LString(err.Error()))
+		L.Push(lua.LNil)
+		L.Push(lua.LString(err.Error()))
 		return 2
 	}
 	if response.Error.Code != 0 {
-		log.Printf("[ERROR] %+v", &response.Error) 
-	        L.Push(lua.LNil)
-                L.Push(lua.LString(response.Error.Code))
+		log.Printf("[ERROR] %+v", &response.Error)
+		L.Push(lua.LNil)
+		L.Push(lua.LString(response.Error.Code))
 		return 2
 	}
 
 	data, err := json.Marshal(response.Result)
 	if err != nil {
-	        L.Push(lua.LNil)
-                L.Push(lua.LString(err.Error()))
+		L.Push(lua.LNil)
+		L.Push(lua.LString(err.Error()))
 		return 2
 	}
-//	log.Printf("[DEBUG] data: %s\n", data)
+	//	log.Printf("[DEBUG] data: %s\n", data)
 	result := make([]dslZabbixTrigger, 0)
 	if err := json.Unmarshal(data, &result); err != nil {
 		log.Printf("[ERROR]: Unmarshal failed: ", err)
@@ -280,12 +278,12 @@ func (d *dslState) dslZabbixGetTriggers(L *lua.LState) int {
 }
 
 func checkZabbixConn(L *lua.LState) *dslZabbix {
-        ud := L.CheckUserData(1)
-        if v, ok := ud.Value.(*dslZabbix); ok {
-                return v
-        }
-        L.ArgError(1, "It is not a zabbix connection")
-        return nil
+	ud := L.CheckUserData(1)
+	if v, ok := ud.Value.(*dslZabbix); ok {
+		return v
+	}
+	L.ArgError(1, "It is not a zabbix connection")
+	return nil
 }
 
 func (d *dslZabbix) buildHttpClient() error {

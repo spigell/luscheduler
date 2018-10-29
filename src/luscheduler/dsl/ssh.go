@@ -1,22 +1,21 @@
 package dsl
 
 import (
-
-	"log"
-	"io/ioutil"
 	"bytes"
+	"io/ioutil"
+	"log"
 
 	"golang.org/x/crypto/ssh"
 
-        lua "github.com/yuin/gopher-lua"
-
+	lua "github.com/yuin/gopher-lua"
 )
+
 type dslSshConfig struct {
-	user 		string
-	host		string
-	port 		string
-	key 		string
-	config     	*ssh.ClientConfig
+	user   string
+	host   string
+	port   string
+	key    string
+	config *ssh.ClientConfig
 }
 
 func (s *dslSshConfig) buildConfig() error {
@@ -43,7 +42,7 @@ func (s *dslSshConfig) buildConfig() error {
 	return nil
 }
 
-func (s *dslSshConfig) makeSession () ( *ssh.Session, error ) {
+func (s *dslSshConfig) makeSession() (*ssh.Session, error) {
 
 	err := s.buildConfig()
 	if err != nil {
@@ -59,12 +58,12 @@ func (s *dslSshConfig) makeSession () ( *ssh.Session, error ) {
 
 	session, err := client.NewSession()
 	if err != nil {
-    		return nil, err
+		return nil, err
 	}
 	return session, nil
 }
 
-func (d *dslState) dslSshExecute (L *lua.LState) int {
+func (d *dslState) dslSshExecute(L *lua.LState) int {
 	session := checkSshConn(L)
 	args := L.CheckTable(2)
 	command := args.RawGetString("command").String()
@@ -74,8 +73,8 @@ func (d *dslState) dslSshExecute (L *lua.LState) int {
 
 	if err := session.Run(command); err != nil {
 		log.Printf("[ERROR] Ssh execution failed: ", err)
-	        L.Push(lua.LNil)
-                L.Push(lua.LString(err.Error()))
+		L.Push(lua.LNil)
+		L.Push(lua.LString(err.Error()))
 		return 2
 	}
 	defer session.Close()
@@ -85,9 +84,9 @@ func (d *dslState) dslSshExecute (L *lua.LState) int {
 	L.Push(result)
 
 	return 1
-	
+
 }
-func (d *dslState) dslSshAuth (L *lua.LState) int {
+func (d *dslState) dslSshAuth(L *lua.LState) int {
 	args := L.CheckTable(1)
 	host := args.RawGetString("host").String()
 	user := args.RawGetString("user").String()
@@ -98,34 +97,34 @@ func (d *dslState) dslSshAuth (L *lua.LState) int {
 
 	key := args.RawGetString("key").String()
 
-	conn := dslSshConfig{host: host, 
+	conn := dslSshConfig{host: host,
 		user: user,
 		port: port,
-		key: key,
+		key:  key,
 	}
 
 	session, err := conn.makeSession()
 
 	if err != nil {
 		log.Printf("[ERROR] Ssh auth/session failed: ", err)
-	        L.Push(lua.LNil)
-                L.Push(lua.LString(err.Error()))
+		L.Push(lua.LNil)
+		L.Push(lua.LString(err.Error()))
 		return 2
-	}	
+	}
 
 	ud := L.NewUserData()
-        ud.Value = session
-        L.SetMetatable(ud, L.GetTypeMetatable("ssh"))
-        L.Push(ud)
-        log.Printf("[INFO] New ssh connection to `%s:%s`\n", host, port)
+	ud.Value = session
+	L.SetMetatable(ud, L.GetTypeMetatable("ssh"))
+	L.Push(ud)
+	log.Printf("[INFO] New ssh connection to `%s:%s`\n", host, port)
 	return 1
 }
 
 func checkSshConn(L *lua.LState) *ssh.Session {
-        ud := L.CheckUserData(1)
-        if v, ok := ud.Value.(*ssh.Session); ok {
-                return v
-        }
-        L.ArgError(1, "It is not a ssh connection")
-        return nil
+	ud := L.CheckUserData(1)
+	if v, ok := ud.Value.(*ssh.Session); ok {
+		return v
+	}
+	L.ArgError(1, "It is not a ssh connection")
+	return nil
 }

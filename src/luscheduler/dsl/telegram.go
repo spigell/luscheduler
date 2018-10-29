@@ -1,46 +1,41 @@
 package dsl
 
-
 import (
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"net/url"
 
-        "net/http"
-        "net/url"
-        "log"
-        "io/ioutil"
-        "fmt"
-
-        lua "github.com/yuin/gopher-lua"
-
-
+	lua "github.com/yuin/gopher-lua"
 )
 
-
-func (d *dslState) TelegramSendMessage (L *lua.LState) int {
+func (d *dslState) TelegramSendMessage(L *lua.LState) int {
 
 	var client http.Client
-        chatId := L.CheckString(1)
-        token := L.CheckString(2)
-        message := L.CheckString(3)
+	chatId := L.CheckString(1)
+	token := L.CheckString(2)
+	message := L.CheckString(3)
 
-        response, err := client.PostForm(
-                fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", token),
-                url.Values{"chat_id": {chatId}, "text": {message}})
+	response, err := client.PostForm(
+		fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", token),
+		url.Values{"chat_id": {chatId}, "text": {message}})
 
-        defer response.Body.Close()
+	defer response.Body.Close()
 
-        if err != nil {
-                log.Println(err)
-                return 1
-        }
+	if err != nil {
+		log.Println(err)
+		return 1
+	}
 
-        body, err := ioutil.ReadAll(response.Body)
-        log.Printf("[DEBUG] telegram response: ", string(body))
+	body, err := ioutil.ReadAll(response.Body)
+	log.Printf("[DEBUG] telegram response: ", string(body))
 
-        if err != nil {
-                log.Println(err)
-                return 1
-        }
+	if err != nil {
+		log.Println(err)
+		return 1
+	}
 
-        return 0
+	return 0
 
 }

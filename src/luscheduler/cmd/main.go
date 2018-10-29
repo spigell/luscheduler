@@ -1,37 +1,34 @@
 package main
 
 import (
-
-	"log"
 	"flag"
-	"os"
-	"io/ioutil"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
 
 	"luscheduler/dsl"
-	
-	lua "github.com/yuin/gopher-lua"
-        "gopkg.in/yaml.v2"
 
+	lua "github.com/yuin/gopher-lua"
+	"gopkg.in/yaml.v2"
 )
 
-
 var (
-        config = flag.String("config", "/etc/luscheduler.yml", "path to config file")
-        version = flag.Bool("version", false, "show version")
-        exec = flag.String("execute", "", "execute file(for testing purposes)")
-        BuildVersion = "None"
+	config       = flag.String("config", "/etc/luscheduler.yml", "path to config file")
+	version      = flag.Bool("version", false, "show version")
+	exec         = flag.String("execute", "", "execute file(for testing purposes)")
+	BuildVersion = "None"
 )
 
 type Config struct {
-        Storage                 string 
-        Settings                string
-        InitScript              string
+	Storage    string
+	Settings   string
+	InitScript string
 }
 
 func main() {
 
-        flag.Parse()
+	flag.Parse()
 	if *version {
 		fmt.Printf("%s\n", BuildVersion)
 		os.Exit(0)
@@ -43,23 +40,20 @@ func main() {
 		os.Exit(0)
 	}
 
+	file, _ := os.Open(*config)
+	configuration := Config{}
+	target, _ := ioutil.ReadAll(file)
 
-        file, _ := os.Open(*config)
-        configuration := Config{}
-        target, _ := ioutil.ReadAll(file)
+	err := yaml.Unmarshal(target, &configuration)
+	if err != nil {
+		log.Printf("[ERROR] Error while parsing configuration: ", err)
+	}
 
-        err := yaml.Unmarshal(target, &configuration)
-        if err != nil {
-                log.Printf("[ERROR] Error while parsing configuration: ", err)
-        }
-
-
-        state := lua.NewState()
-        config := dsl.Prepare()
-        dsl.Register(config, state)
-        if err := state.DoFile(configuration.InitScript); err != nil {
-                log.Printf("[FATAL] Main file: %s\n", err.Error())
+	state := lua.NewState()
+	config := dsl.Prepare()
+	dsl.Register(config, state)
+	if err := state.DoFile(configuration.InitScript); err != nil {
+		log.Printf("[FATAL] Main file: %s\n", err.Error())
 	}
 
 }
-
