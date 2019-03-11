@@ -8,11 +8,11 @@ SOURCES := $(shell find $(SOURCEDIR) -name '*.go')
 VERSION := $(shell git describe --abbrev=0 --tags)
 SHA := $(shell git rev-parse --short HEAD)
 
-GOPATH ?= /usr/local/go
-GOPATH := ${CURDIR}:${GOPATH}
+GOPATH := ${CURDIR}
 export GOPATH
 
-$(BINARY): $(SOURCES)
+build:
+	#go get -u -v $$(go list -tags 'sqlite' -f '{{join .Imports "\n"}}{{"\n"}}{{join .TestImports "\n"}}' ./... | sort | uniq | grep -v luscheduler)
 	go build -o ${BINARY} -ldflags "-X main.BuildVersion=$(VERSION)-$(SHA)" $(SOURCEDIR)/$(NAME)/cmd/main.go
 
 run: clean $(BINARY)

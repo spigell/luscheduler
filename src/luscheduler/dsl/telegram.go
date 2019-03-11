@@ -24,18 +24,23 @@ func (d *dslState) TelegramSendMessage(L *lua.LState) int {
 	defer response.Body.Close()
 
 	if err != nil {
-		log.Println(err)
-		return 1
+		log.Printf("[ERROR] telegram send message failed: ", err)
+		L.Push(lua.LNil)
+		L.Push(lua.LString(err.Error()))
+		return 2
 	}
 
 	body, err := ioutil.ReadAll(response.Body)
-	log.Printf("[DEBUG] telegram response: ", string(body))
 
 	if err != nil {
-		log.Println(err)
-		return 1
+		log.Printf("[ERROR] telegram read telegram response: ", err)
+		L.Push(lua.LNil)
+		L.Push(lua.LString(err.Error()))
+		return 2
 	}
+//	log.Printf("[DEBUG] telegram response: ", string(body))
+	L.Push(lua.LString(string(body)))
 
-	return 0
+	return 1
 
 }

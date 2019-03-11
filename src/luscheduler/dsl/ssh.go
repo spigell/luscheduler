@@ -77,7 +77,7 @@ func (d *dslState) dslSshExecute(L *lua.LState) int {
 		L.Push(lua.LString(err.Error()))
 		return 2
 	}
-	defer session.Close()
+	session.Close()
 
 	result := L.NewTable()
 	L.SetField(result, "output", lua.LString(output.String()))
@@ -125,6 +125,6 @@ func checkSshConn(L *lua.LState) *ssh.Session {
 	if v, ok := ud.Value.(*ssh.Session); ok {
 		return v
 	}
-	L.ArgError(1, "It is not a ssh connection")
+	L.ArgError(1, "This is not a ssh connection")
 	return nil
 }

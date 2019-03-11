@@ -1,4 +1,5 @@
 
 function sendTelegram(message)
-	telegram.sendmessage("CHATID", "TOKEN", message)
+	response, err = telegram.sendmessage("CHATID", "TOKEN", message)
+	print(response)
 end

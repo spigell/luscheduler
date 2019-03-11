@@ -6,6 +6,7 @@ import (
 	"github.com/robfig/cron"
 
 	lua "github.com/yuin/gopher-lua"
+	libs "github.com/vadv/gopher-lua-libs"
 )
 
 var (
@@ -19,6 +20,7 @@ type dslState struct {
 func Run(s string) {
 	state := lua.NewState()
 	config := Prepare()
+	libs.Preload(state)
 	Register(config, state)
 	if err := state.DoFile(s); err != nil {
 		log.Printf("[ERROR] Error executing scenario: ", err)
@@ -41,13 +43,6 @@ func Register(config *dslState, L *lua.LState) {
 	L.SetGlobal("telegram", telegram)
 	L.SetField(telegram, "sendmessage", L.NewFunction(config.TelegramSendMessage))
 
-	filepath := L.NewTypeMetatable("filepath")
-	L.SetGlobal("filepath", filepath)
-	L.SetField(filepath, "base", L.NewFunction(config.dslFilepathBasename))
-	L.SetField(filepath, "dir", L.NewFunction(config.dslFilepathDir))
-	L.SetField(filepath, "ext", L.NewFunction(config.dslFilepathExt))
-	L.SetField(filepath, "glob", L.NewFunction(config.dslFilepathGlob))
-
 	zabbix := L.NewTypeMetatable("zabbix")
 	L.SetGlobal("zabbix", zabbix)
 	L.SetField(zabbix, "login", L.NewFunction(config.dslZabbixLogin))
@@ -55,15 +50,6 @@ func Register(config *dslState, L *lua.LState) {
 		"alarms": config.dslZabbixGetTriggers,
 		"logout": config.dslZabbixLogout,
 	}))
-
-	http := L.NewTypeMetatable("http")
-	L.SetGlobal("http", http)
-	L.SetField(http, "request", L.NewFunction(config.dslHttpRequest))
-
-	json := L.NewTypeMetatable("json")
-	L.SetGlobal("json", json)
-	L.SetField(json, "decode", L.NewFunction(config.dslJsonDecode))
-	L.SetField(json, "encode", L.NewFunction(config.dslJsonEncode))
 
 	ssh := L.NewTypeMetatable("ssh")
 	L.SetGlobal("ssh", ssh)

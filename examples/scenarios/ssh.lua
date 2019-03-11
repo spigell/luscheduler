@@ -1,4 +1,4 @@
-SCHEDULE = '@every 500s'
+SCHEDULE = '@every 5s'
 session, err = ssh.auth{host = 'localhost', user = 'spigell', key = '/home/spigell/.ssh/keys/spigell.key'}
 
 

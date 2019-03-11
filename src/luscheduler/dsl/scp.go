@@ -21,7 +21,7 @@ func (d *dslState) dslScpCopy(L *lua.LState) int {
 		L.Push(lua.LString(err.Error()))
 		return 2
 	}
-	defer session.Close()
+	session.Close()
 
 	L.Push(lua.LString("Copied!"))
 

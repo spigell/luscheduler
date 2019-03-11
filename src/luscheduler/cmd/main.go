@@ -7,10 +7,11 @@ import (
 	"log"
 	"os"
 
-	"luscheduler/dsl"
-
 	lua "github.com/yuin/gopher-lua"
 	"gopkg.in/yaml.v2"
+	libs "github.com/vadv/gopher-lua-libs"
+
+	"luscheduler/dsl"
 )
 
 var (
@@ -51,6 +52,7 @@ func main() {
 
 	state := lua.NewState()
 	config := dsl.Prepare()
+	libs.Preload(state)
 	dsl.Register(config, state)
 	if err := state.DoFile(configuration.InitScript); err != nil {
 		log.Printf("[FATAL] Main file: %s\n", err.Error())

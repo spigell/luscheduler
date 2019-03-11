@@ -16,3 +16,6 @@
 [submodule "src/github.com/kballard/go-shellquote"]
 	path = src/github.com/kballard/go-shellquote
 	url = https://github.com/kballard/go-shellquote
+[submodule "src/github.com/vadv/gopher-lua-libs"]
+	path = src/github.com/vadv/gopher-lua-libs
+	url = https://github.com/vadv/gopher-lua-libs.git
