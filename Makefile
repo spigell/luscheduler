@@ -17,3 +17,8 @@ all: $(BIN) ; $(info $(M) building executable…) @ ## Build program binary
 		-tags release \
 		-ldflags '-X main.BuildVersion=$(VERSION)'  \
 		-o $(BIN)/$(PACKAGE) main.go
+
+
+.PHONY: fmt
+fmt: ; $(info $(M) running gofmt…) @ ## Run gofmt on all source files
+		$Q $(GO) fmt ./...

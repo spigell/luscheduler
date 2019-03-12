@@ -7,9 +7,9 @@ import (
 	"log"
 	"os"
 
+	libs "github.com/vadv/gopher-lua-libs"
 	lua "github.com/yuin/gopher-lua"
 	"gopkg.in/yaml.v2"
-	libs "github.com/vadv/gopher-lua-libs"
 
 	"luscheduler/dsl"
 )

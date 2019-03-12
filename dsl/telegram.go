@@ -38,7 +38,7 @@ func (d *dslState) TelegramSendMessage(L *lua.LState) int {
 		L.Push(lua.LString(err.Error()))
 		return 2
 	}
-//	log.Printf("[DEBUG] telegram response: ", string(body))
+	//	log.Printf("[DEBUG] telegram response: ", string(body))
 	L.Push(lua.LString(string(body)))
 
 	return 1

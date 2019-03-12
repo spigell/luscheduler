@@ -5,8 +5,8 @@ import (
 
 	"github.com/robfig/cron"
 
-	lua "github.com/yuin/gopher-lua"
 	libs "github.com/vadv/gopher-lua-libs"
+	lua "github.com/yuin/gopher-lua"
 )
 
 var (
