@@ -1,14 +1,12 @@
-FROM golang:alpine as builder
-RUN apk --no-cache add git make gcc
+FROM golang:1.12-alpine3.9 as builder
+RUN apk --no-cache add git make gcc musl-dev
 
 WORKDIR /go/luscheduler
+COPY . ${WORKDIR}
 
-RUN git clone http://192.168.23.1:10085/spigell/luscheduler .
-
-#RUN make submodule_check
 RUN make
 
-FROM alpine:latest
+FROM alpine:3.9.2
 RUN apk --no-cache add ca-certificates bash tzdata
 WORKDIR /root/
 COPY --from=builder /go/luscheduler/bin/luscheduler .
