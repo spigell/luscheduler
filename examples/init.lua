@@ -1,3 +1,4 @@
+filepath = require('filepath')
 local scenarios_dir = "examples/".."scenarios"
 
 for _, scenario in pairs(filepath.glob(scenarios_dir.."/*.lua")) do

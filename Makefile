@@ -1,26 +1,19 @@
-#!/usr/bin/env make
+PACKAGE  = luscheduler
+VERSION ?= $(shell git describe --tags --always --dirty --match=v* 2> /dev/null || \
+			cat $(CURDIR)/.version 2> /dev/null || echo v0)
+BIN      = $(CURDIR)/bin
 
-NAME=luscheduler
-BINARY=./bin/${NAME}
-SOURCEDIR=./src
-SOURCES := $(shell find $(SOURCEDIR) -name '*.go')
+GO      = go
+TIMEOUT = 15
+V = 0
+Q = $(if $(filter 1,$V),,@)
+M = $(shell printf "\033[34;1m▶\033[0m")
 
-VERSION := $(shell git describe --abbrev=0 --tags)
-SHA := $(shell git rev-parse --short HEAD)
+export GO111MODULE=on
 
-GOPATH := ${CURDIR}
-export GOPATH
-
-build:
-	#go get -u -v $$(go list -tags 'sqlite' -f '{{join .Imports "\n"}}{{"\n"}}{{join .TestImports "\n"}}' ./... | sort | uniq | grep -v luscheduler)
-	go build -o ${BINARY} -ldflags "-X main.BuildVersion=$(VERSION)-$(SHA)" $(SOURCEDIR)/$(NAME)/cmd/main.go
-
-run: clean $(BINARY)
-	${BINARY}
-
-clean:
-	rm -f $(BINARY)
-
-.DEFAULT_GOAL: $(BINARY)
-
-include Makefile.git
+.PHONY: all
+all: $(BIN) ; $(info $(M) building executable…) @ ## Build program binary
+	$Q $(GO) build \
+		-tags release \
+		-ldflags '-X main.BuildVersion=$(VERSION)'  \
+		-o $(BIN)/$(PACKAGE) main.go
