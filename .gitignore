@@ -1,7 +1,7 @@
 *.json
 test.go
 var*
-*.yml
+luscheduler.yml
 *_test
 bin/*
 *.sublime-workspace

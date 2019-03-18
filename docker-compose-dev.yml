@@ -1,0 +1,11 @@
+version: '3'
+services:
+  luscheduler:
+    build: .
+    image: luscheduler
+    container_name: luscheduler_test
+    volumes:
+      - "./luscheduler.yml:/etc/luscheduler.yml"
+      - "./settings.lua_test:/root/settings.lua_test"
+      - "./examples:/root/examples"
+      - "./var:/root/var"

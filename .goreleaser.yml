@@ -1,0 +1,26 @@
+before:
+  hooks:
+    - go mod download
+builds:
+- goos:
+  - darwin
+  - linux
+  - freebsd
+  goarch:
+  - amd64
+  - 386
+  ignore:
+  - goos: darwin
+    goarch: 386
+  - goos: freebsd
+    goarch: 386
+  env:
+    - CGO_ENABLED=0
+archive:
+  format: tar.gz
+  files:
+    - README.md
+changelog:
+  skip: true
+checksum:
+name_template: '{{ .ProjectName }}_{{ .Version }}_checksums.txt'
