@@ -1,6 +1,2 @@
 ---
-
-# storage dir should exists
-storage: "./var"
-
 initscript: "examples/init.lua"
