@@ -18,10 +18,11 @@ builds:
     - CGO_ENABLED=0
   ldflags:
     - -s -w -X main.BuildVersion={{.Version}}
-archive:
-  format: tar.gz
-  files:
-    - README.md
+archives:
+  - id: main
+    format: tar.gz
+    files:
+      - README.md
 changelog:
   skip: true
 checksum:
