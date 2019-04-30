@@ -39,10 +39,6 @@ func Register(config *dslState, L *lua.LState) {
 	L.SetGlobal("schedule", schedule)
 	L.SetField(schedule, "new", L.NewFunction(config.dslNewSchedule))
 
-	telegram := L.NewTypeMetatable("telegram")
-	L.SetGlobal("telegram", telegram)
-	L.SetField(telegram, "sendmessage", L.NewFunction(config.TelegramSendMessage))
-
 	zabbix := L.NewTypeMetatable("zabbix")
 	L.SetGlobal("zabbix", zabbix)
 	L.SetField(zabbix, "login", L.NewFunction(config.dslZabbixLogin))

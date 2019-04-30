@@ -1,8 +1,5 @@
 SCHEDULE = '@every 10s'
 
-package.path = filepath.dir(debug.getinfo(1).source)..'/../?.lua;'.. package.path
-settings = require "settings"
-
 p, err = zabbix.login("http://127.0.0.1:8081/api_jsonrpc.php", "admin", "zabbix")
 alarms = p:alarms{pattern = ".*", severity = "5", duration = "100"}
 
