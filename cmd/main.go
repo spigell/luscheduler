@@ -7,11 +7,11 @@ import (
 	"log"
 	"os"
 
-	libs "github.com/vadv/gopher-lua-libs"
 	lua "github.com/yuin/gopher-lua"
 	"gopkg.in/yaml.v2"
 
-	"luscheduler/dsl"
+	oldDsl "luscheduler/dsl"
+        native "luscheduler"
 )
 
 var (
@@ -37,7 +37,7 @@ func main() {
 
 	if *exec != `` {
 		scenario := *exec
-		dsl.Run(scenario)
+		oldDsl.Run(scenario)
 		os.Exit(0)
 	}
 
@@ -51,9 +51,10 @@ func main() {
 	}
 
 	state := lua.NewState()
-	config := dsl.Prepare()
-	libs.Preload(state)
-	dsl.Register(config, state)
+	defer state.Close()
+	config := oldDsl.Prepare()
+	native.Preload(state)
+	oldDsl.Register(config, state)
 	if err := state.DoFile(configuration.InitScript); err != nil {
 		log.Printf("[FATAL] Main file: %s\n", err.Error())
 	}

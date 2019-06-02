@@ -7,6 +7,7 @@ import (
 
 	libs "github.com/vadv/gopher-lua-libs"
 	lua "github.com/yuin/gopher-lua"
+        native "luscheduler"
 )
 
 var (
@@ -21,6 +22,7 @@ func Run(s string) {
 	state := lua.NewState()
 	config := Prepare()
 	libs.Preload(state)
+	native.Preload(state)
 	Register(config, state)
 	if err := state.DoFile(s); err != nil {
 		log.Printf("[ERROR] Error executing scenario: ", err)
@@ -45,14 +47,6 @@ func Register(config *dslState, L *lua.LState) {
 	L.SetField(zabbix, "__index", L.SetFuncs(L.NewTable(), map[string]lua.LGFunction{
 		"alarms": config.dslZabbixGetTriggers,
 		"logout": config.dslZabbixLogout,
-	}))
-
-	ssh := L.NewTypeMetatable("ssh")
-	L.SetGlobal("ssh", ssh)
-	L.SetField(ssh, "auth", L.NewFunction(config.dslSshAuth))
-	L.SetField(ssh, "__index", L.SetFuncs(L.NewTable(), map[string]lua.LGFunction{
-		"execute": config.dslSshExecute,
-		"copy":    config.dslScpCopy,
 	}))
 
 }

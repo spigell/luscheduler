@@ -16,7 +16,7 @@ all: $(BIN) ; $(info $(M) building executable…) @ ## Build program binary
 	$Q $(GO) build \
 		-tags release \
 		-ldflags '-X main.BuildVersion=$(VERSION)'  \
-		-o $(BIN)/$(PACKAGE) main.go
+		-o $(BIN)/$(PACKAGE) ./cmd/main.go
 
 
 .PHONY: fmt
