@@ -3,7 +3,7 @@ package libs
 import (
 
 	externalLibs "github.com/vadv/gopher-lua-libs"
-	ssh "luscheduler/ssh"
+	ssh "luscheduler/libs/ssh"
 
 	lua "github.com/yuin/gopher-lua"
 )
