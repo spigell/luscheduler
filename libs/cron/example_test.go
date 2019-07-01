@@ -3,8 +3,8 @@ package cron
 import (
 	"log"
 
-	lua "github.com/yuin/gopher-lua"
 	time "github.com/vadv/gopher-lua-libs/time"
+	lua "github.com/yuin/gopher-lua"
 )
 
 func Example_package() {

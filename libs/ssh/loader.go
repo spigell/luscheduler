@@ -17,9 +17,9 @@ func Loader(L *lua.LState) int {
 		//"copy":    config.dslScpCopy,
 	}))
 	t := L.NewTable()
-        L.SetFuncs(t, api)
-        L.Push(t)
-        return 1
+	L.SetFuncs(t, api)
+	L.Push(t)
+	return 1
 
 }
 

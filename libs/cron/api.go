@@ -5,10 +5,8 @@ import (
 
 	"github.com/robfig/cron"
 
-
 	lua "github.com/yuin/gopher-lua"
 )
-
 
 func Run(s string) {
 	state := lua.NewState()
@@ -18,7 +16,7 @@ func Run(s string) {
 }
 
 func NewSchedule(L *lua.LState) int {
-	cron :=  checkCron(L)
+	cron := checkCron(L)
 	schedule := L.CheckString(2)
 	scenario := L.CheckString(3)
 	log.Printf("[INFO] add new schedule: `%s` with scenario `%s`\n", schedule, scenario)
@@ -37,7 +35,6 @@ func New(L *lua.LState) int {
 	L.Push(ud)
 	return 1
 }
-
 
 func checkCron(L *lua.LState) *cron.Cron {
 	ud := L.CheckUserData(1)

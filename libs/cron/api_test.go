@@ -7,7 +7,6 @@ import (
 	lua "github.com/yuin/gopher-lua"
 )
 
-
 func TestApi(t *testing.T) {
 
 	state := lua.NewState()

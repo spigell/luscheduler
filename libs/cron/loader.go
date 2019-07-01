@@ -16,9 +16,9 @@ func Loader(L *lua.LState) int {
 		`new`: NewSchedule,
 	}))
 	t := L.NewTable()
-        L.SetFuncs(t, api)
-        L.Push(t)
-        return 1
+	L.SetFuncs(t, api)
+	L.Push(t)
+	return 1
 
 }
 

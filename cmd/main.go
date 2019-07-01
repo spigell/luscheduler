@@ -10,8 +10,8 @@ import (
 	lua "github.com/yuin/gopher-lua"
 	"gopkg.in/yaml.v2"
 
-        native "luscheduler"
-        cron "luscheduler/libs/cron"
+	native "luscheduler"
+	cron "luscheduler/libs/cron"
 )
 
 var (
