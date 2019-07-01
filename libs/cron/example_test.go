@@ -15,7 +15,7 @@ func Example_package() {
 local time = require("time")
 local cron = require("cron")
 scheduler = cron.new()
-scheduler:new('@every 1s', './test/hello.lua')
+scheduler:add('@every 1s', './test/hello.lua')
 time.sleep(1)
 `
 	if err := state.DoString(source); err != nil {

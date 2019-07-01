@@ -6,14 +6,8 @@ import (
 	"github.com/robfig/cron"
 
 	lua "github.com/yuin/gopher-lua"
+	libs "luscheduler"
 )
-
-func Run(s string) {
-	state := lua.NewState()
-	if err := state.DoFile(s); err != nil {
-		log.Println("[ERROR] Error executing scenario: ", err)
-	}
-}
 
 func NewSchedule(L *lua.LState) int {
 	cron := checkCron(L)
@@ -21,7 +15,7 @@ func NewSchedule(L *lua.LState) int {
 	scenario := L.CheckString(3)
 	log.Printf("[INFO] add new schedule: `%s` with scenario `%s`\n", schedule, scenario)
 
-	cron.AddFunc(schedule, func() { (Run(scenario)) })
+	cron.AddFunc(schedule, func() { (run(scenario)) })
 	return 1
 }
 
@@ -43,4 +37,14 @@ func checkCron(L *lua.LState) *cron.Cron {
 	}
 	L.ArgError(1, "This is not a Cron")
 	return nil
+}
+
+func run(s string) {
+
+	state := lua.NewState()
+	Preload(state)
+	libs.Preload(state)
+	if err := state.DoFile(s); err != nil {
+		log.Println("[ERROR] Error executing scenario: ", err)
+	}
 }

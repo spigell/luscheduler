@@ -1,9 +1,7 @@
 package ssh
 
 import (
-	"bytes"
 	"io/ioutil"
-	"log"
 
 	"golang.org/x/crypto/ssh"
 
@@ -16,6 +14,38 @@ type sshConfig struct {
 	port   string
 	key    string
 	config *ssh.ClientConfig
+}
+
+func Client(L *lua.LState) int {
+	args := L.CheckTable(1)
+	host := args.RawGetString("host").String()
+	user := args.RawGetString("user").String()
+	port := args.RawGetString("port").String()
+	if port == "nil" {
+		port = "22"
+	}
+
+	key := args.RawGetString("key").String()
+
+	conn := sshConfig{host: host,
+		user: user,
+		port: port,
+		key:  key,
+	}
+
+	client, err := conn.buildClient()
+
+	if err != nil {
+		L.Push(lua.LNil)
+		L.Push(lua.LString(err.Error()))
+		return 2
+	}
+
+	ud := L.NewUserData()
+	ud.Value = client
+	L.SetMetatable(ud, L.GetTypeMetatable(`ssh`))
+	L.Push(ud)
+	return 1
 }
 
 func (s *sshConfig) buildConfig() error {
@@ -42,8 +72,7 @@ func (s *sshConfig) buildConfig() error {
 	return nil
 }
 
-func (s *sshConfig) makeSession() (*ssh.Session, error) {
-
+func (s *sshConfig) buildClient() (*ssh.Client, error) {
 	err := s.buildConfig()
 	if err != nil {
 		return nil, err
@@ -55,76 +84,21 @@ func (s *sshConfig) makeSession() (*ssh.Session, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	session, err := client.NewSession()
-	if err != nil {
-		return nil, err
-	}
-	return session, nil
+	return client, nil
 }
 
-func Execute(L *lua.LState) int {
-	session := checkConn(L)
-	args := L.CheckTable(2)
-	command := args.RawGetString("command").String()
 
-	var output bytes.Buffer
-	session.Stdout = &output
-
-	if err := session.Run(command); err != nil {
-		log.Println("[ERROR] Ssh execution failed: ", err)
-		L.Push(lua.LNil)
-		L.Push(lua.LString(err.Error()))
-		return 2
-	}
-	session.Close()
-
-	result := L.NewTable()
-	L.SetField(result, "output", lua.LString(output.String()))
-	L.Push(result)
-
-	return 1
-
-}
-func Auth(L *lua.LState) int {
-	args := L.CheckTable(1)
-	host := args.RawGetString("host").String()
-	user := args.RawGetString("user").String()
-	port := args.RawGetString("port").String()
-	if port == "nil" {
-		port = "22"
-	}
-
-	key := args.RawGetString("key").String()
-
-	conn := sshConfig{host: host,
-		user: user,
-		port: port,
-		key:  key,
-	}
-
-	session, err := conn.makeSession()
-
-	if err != nil {
-		log.Println("[ERROR] Ssh auth/session failed: ", err)
-		L.Push(lua.LNil)
-		L.Push(lua.LString(err.Error()))
-		return 2
-	}
-
-	ud := L.NewUserData()
-	ud.Value = session
-	L.SetMetatable(ud, L.GetTypeMetatable("ssh"))
-	L.Push(ud)
-	log.Printf("[INFO] New ssh connection to `%s:%s`\n", host, port)
-	return 1
-}
-
-func checkConn(L *lua.LState) *ssh.Session {
+func checkClient(L *lua.LState) *ssh.Client {
 	ud := L.CheckUserData(1)
-	if v, ok := ud.Value.(*ssh.Session); ok {
+	if v, ok := ud.Value.(*ssh.Client); ok {
 		return v
 	}
-	L.ArgError(1, "This is not a ssh connection")
+	L.ArgError(1, "This is not a ssh client")
 	return nil
+}
+
+func sshError(L *lua.LState, e error) int {
+	L.Push(lua.LNil)
+	L.Push(lua.LString(e.Error()))
+	return 2
 }

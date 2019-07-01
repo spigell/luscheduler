@@ -14,7 +14,7 @@ func Loader(L *lua.LState) int {
 	L.SetGlobal(`ssh`, ssh)
 	L.SetField(ssh, `__index`, L.SetFuncs(L.NewTable(), map[string]lua.LGFunction{
 		`execute`: Execute,
-		//"copy":    config.dslScpCopy,
+		`copy`:    Copy,
 	}))
 	t := L.NewTable()
 	L.SetFuncs(t, api)
@@ -24,5 +24,5 @@ func Loader(L *lua.LState) int {
 }
 
 var api = map[string]lua.LGFunction{
-	`auth`: Auth,
+	`client`: Client,
 }

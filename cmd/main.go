@@ -10,7 +10,7 @@ import (
 	lua "github.com/yuin/gopher-lua"
 	"gopkg.in/yaml.v2"
 
-	native "luscheduler"
+	libs "luscheduler"
 	cron "luscheduler/libs/cron"
 )
 
@@ -35,7 +35,7 @@ func main() {
 
 	if *exec != `` {
 		scenario := *exec
-		cron.Run(scenario)
+		run(scenario)
 		os.Exit(0)
 	}
 
@@ -48,10 +48,16 @@ func main() {
 		log.Println("[ERROR] Error while parsing configuration: ", err)
 	}
 
+	run(configuration.InitScript)
+
+}
+
+func run(file string) {
 	state := lua.NewState()
 	defer state.Close()
-	native.Preload(state)
-	if err := state.DoFile(configuration.InitScript); err != nil {
-		log.Printf("[FATAL] Main file: %s\n", err.Error())
+	libs.Preload(state)
+	cron.Preload(state)
+	if err := state.DoFile(file); err != nil {
+		log.Printf("[ERROR] file: %s\n", err.Error())
 	}
 }

@@ -13,7 +13,7 @@ func Loader(L *lua.LState) int {
 	cron := L.NewTypeMetatable(`cron`)
 	L.SetGlobal(`cron`, cron)
 	L.SetField(cron, `__index`, L.SetFuncs(L.NewTable(), map[string]lua.LGFunction{
-		`new`: NewSchedule,
+		`add`: NewSchedule,
 	}))
 	t := L.NewTable()
 	L.SetFuncs(t, api)
