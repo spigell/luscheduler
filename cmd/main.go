@@ -10,8 +10,8 @@ import (
 	lua "github.com/yuin/gopher-lua"
 	"gopkg.in/yaml.v2"
 
-	oldDsl "luscheduler/dsl"
         native "luscheduler"
+        cron "luscheduler/libs/cron"
 )
 
 var (
@@ -22,8 +22,6 @@ var (
 )
 
 type Config struct {
-	Storage    string
-	Settings   string
 	InitScript string
 }
 
@@ -37,7 +35,7 @@ func main() {
 
 	if *exec != `` {
 		scenario := *exec
-		oldDsl.Run(scenario)
+		cron.Run(scenario)
 		os.Exit(0)
 	}
 
@@ -47,16 +45,13 @@ func main() {
 
 	err := yaml.Unmarshal(target, &configuration)
 	if err != nil {
-		log.Printf("[ERROR] Error while parsing configuration: ", err)
+		log.Println("[ERROR] Error while parsing configuration: ", err)
 	}
 
 	state := lua.NewState()
 	defer state.Close()
-	config := oldDsl.Prepare()
 	native.Preload(state)
-	oldDsl.Register(config, state)
 	if err := state.DoFile(configuration.InitScript); err != nil {
 		log.Printf("[FATAL] Main file: %s\n", err.Error())
 	}
-
 }

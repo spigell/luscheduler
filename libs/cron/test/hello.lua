@@ -1,0 +1,1 @@
+print("GO + lua = Cool")
