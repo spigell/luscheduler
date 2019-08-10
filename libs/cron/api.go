@@ -1,21 +1,21 @@
 package cron
 
 import (
-	"log"
-
 	"github.com/robfig/cron"
 
+	plugin "github.com/vadv/gopher-lua-libs/plugin"
 	lua "github.com/yuin/gopher-lua"
-	libs "luscheduler"
 )
 
 func NewSchedule(L *lua.LState) int {
 	cron := checkCron(L)
 	schedule := L.CheckString(2)
-	scenario := L.CheckString(3)
-	log.Printf("[INFO] add new schedule: `%s` with scenario `%s`\n", schedule, scenario)
+	scenario := L.CheckUserData(3)
 
-	cron.AddFunc(schedule, func() { (run(scenario)) })
+	state := lua.NewState()
+	defer state.Close()
+	state.Push(scenario)
+	cron.AddFunc(schedule, func() { plugin.Run(state) })
 	return 1
 }
 
@@ -37,14 +37,4 @@ func checkCron(L *lua.LState) *cron.Cron {
 	}
 	L.ArgError(1, "This is not a Cron")
 	return nil
-}
-
-func run(s string) {
-
-	state := lua.NewState()
-	Preload(state)
-	libs.Preload(state)
-	if err := state.DoFile(s); err != nil {
-		log.Println("[ERROR] Error executing scenario: ", err)
-	}
 }

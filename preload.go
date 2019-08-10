@@ -1,16 +1,16 @@
 package libs
 
 import (
-	externalLibs "github.com/vadv/gopher-lua-libs"
-//	cron "luscheduler/libs/cron"
+	ExternalLibs "github.com/vadv/gopher-lua-libs"
 	ssh "luscheduler/libs/ssh"
+	cron "luscheduler/libs/cron"
 
 	lua "github.com/yuin/gopher-lua"
 )
 
 // Preload preload all gopher libs and luscheduler packages
 func Preload(L *lua.LState) {
-	externalLibs.Preload(L)
+	ExternalLibs.Preload(L)
+	cron.Preload(L)
 	ssh.Preload(L)
-//	cron.Preload(L)
 }

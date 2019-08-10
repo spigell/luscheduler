@@ -11,7 +11,6 @@ import (
 	"gopkg.in/yaml.v2"
 
 	libs "luscheduler"
-	cron "luscheduler/libs/cron"
 )
 
 var (
@@ -56,7 +55,6 @@ func run(file string) {
 	state := lua.NewState()
 	defer state.Close()
 	libs.Preload(state)
-	cron.Preload(state)
 	if err := state.DoFile(file); err != nil {
 		log.Printf("[ERROR] file: %s\n", err.Error())
 	}
