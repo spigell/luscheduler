@@ -6,8 +6,6 @@ ssh = require("ssh")
 
 scheduler = cron.new()
 
-package.preload['cron'] = cron
-
 
 local plugin_body = [[
     local time = require("time")
@@ -22,7 +20,7 @@ local plugin_body = [[
 local string_plugin = plugin.do_string(plugin_body)
 local file_plugin = plugin.do_file('./test/hello.lua')
 
---scheduler:add('@every 3s', string_plugin)
+scheduler:add('@every 3s', string_plugin)
 scheduler:add('@every 10s', file_plugin)
 
 time.sleep(11)
