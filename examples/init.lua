@@ -1,20 +1,34 @@
-filepath = require('filepath')
-local scenarios_dir = "examples/".."scenarios"
+local cron = require("cron")
+local time = require("time")
+local plugin = require("plugin")
+local filepath = require("filepath")
+local strings = require("strings")
+local log = require("log")
 
-for _, scenario in pairs(filepath.glob(scenarios_dir.."/*.lua")) do
+local scenarios_dir = 'scenarios'
 
-	local contents = ""
-    local file = io.open( scenario, "r" )
-    if (file) then
-        contents = file:read()
-        file:close()
-        get_schedule = loadstring(contents)
+local scheduler = cron.new()
+
+for _, scenario_file in pairs(filepath.glob(scenarios_dir.."/*.lua")) do
+  local file = io.open(scenario_file, "r")
+  
+  if (file) then
+    for line in io.lines(scenario_file) do
+      if strings.has_prefix(line, 'SCHEDULE') then
+        get_schedule = loadstring(line)
         get_schedule()
+      end
     end
-	schedule.new(SCHEDULE, scenario)
+  end
+  if not (SCHEDULE == 'never') then
+    local scenario = plugin.do_file(scenario_file)
+    print('[INFO] Set scenario ' .. scenario_file .. ' for ' .. SCHEDULE)
+    scheduler:add(SCHEDULE, scenario)
+  else
+    print('[INFO] Skip scenario ' .. scenario_file)
+  end
 end
 
-function sleep()
-  os.execute("while sleep 3600; do :; done")
+while true do
+  time.sleep(600)
 end
-sleep()

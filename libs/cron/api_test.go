@@ -3,8 +3,10 @@ package cron
 import (
 	"testing"
 
-	time "github.com/vadv/gopher-lua-libs/time"
+	filepath "github.com/vadv/gopher-lua-libs/filepath"
+	inspect "github.com/vadv/gopher-lua-libs/inspect"
 	plugin "github.com/vadv/gopher-lua-libs/plugin"
+	time "github.com/vadv/gopher-lua-libs/time"
 	lua "github.com/yuin/gopher-lua"
 
 	ssh "luscheduler/libs/ssh"
@@ -16,6 +18,7 @@ func TestApi(t *testing.T) {
 	Preload(state)
 	time.Preload(state)
 	ssh.Preload(state)
+	inspect.Preload(state)
 
 	plugin.Preload(state)
 	if err := state.DoFile("./test/test_api.lua"); err != nil {
