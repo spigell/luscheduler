@@ -2,7 +2,9 @@ before:
   hooks:
     - go mod download
 builds:
-- goos:
+- id: main
+  main: ./cmd/main.go
+  goos:
   - darwin
   - linux
   - freebsd
