@@ -2,10 +2,10 @@ package ssh
 
 import (
 	"bytes"
-	
+
 	"github.com/tmc/scp"
-	"golang.org/x/crypto/ssh"
 	lua "github.com/yuin/gopher-lua"
+	"golang.org/x/crypto/ssh"
 )
 
 func Execute(L *lua.LState) int {
@@ -35,7 +35,6 @@ func Execute(L *lua.LState) int {
 
 	return 1
 }
-
 
 func makeSession(client *ssh.Client) (*ssh.Session, error) {
 	session, err := client.NewSession()

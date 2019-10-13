@@ -19,6 +19,7 @@ func TestApi(t *testing.T) {
 	time.Preload(state)
 	ssh.Preload(state)
 	inspect.Preload(state)
+	filepath.Preload(state)
 
 	plugin.Preload(state)
 	if err := state.DoFile("./test/test_api.lua"); err != nil {

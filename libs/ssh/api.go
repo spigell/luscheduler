@@ -87,7 +87,6 @@ func (s *sshConfig) buildClient() (*ssh.Client, error) {
 	return client, nil
 }
 
-
 func checkClient(L *lua.LState) *ssh.Client {
 	ud := L.CheckUserData(1)
 	if v, ok := ud.Value.(*ssh.Client); ok {
